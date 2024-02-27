@@ -7,8 +7,8 @@
 
  Neste projeto será desenvolvida e implementada uma Wiki.
 
-<h4 align="center"> 
-	🚧  Em desenvolvimento . . .
+<h4 align="center">     
+	🚧  Em desenvolvimento . . . .
 </h4>
 
 # Índice/Sumário

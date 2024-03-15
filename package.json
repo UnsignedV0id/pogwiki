@@ -1,0 +1,18 @@
+{
+  "name": "pogwiki",
+  "version": "1.0.0",
+  "description": "![Capa do Projeto](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcReTr_XZ4v4JTLINZ6mJM7HHup59fyzSG_IjgrUTAdT_g&s)",
+  "main": "index.js",
+  "scripts": {
+    "main": "app.js",
+    "test": "(o.o)b"
+  },
+  "keywords": [],
+  "author": "pogteam",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.18.3",
+    "uuid": "^9.0.1"
+  }
+}

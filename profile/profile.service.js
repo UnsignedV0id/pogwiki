@@ -1,17 +1,17 @@
 const { v4: uuidv4 } = require("uuid");
-const profile = require("./profile.entity.js");
-const profileDTO = require("./profile.dto.js");
+const Profile = require("./profile.entity.js");
+const ProfileDTO = require("./profile.dto.js");
 const { GenericException } = require("../generic-exception.js");
 
-const Profile = [
+const profile = [
   {
-  //   id: uuidv4(),
-  //   userID: 
-  //   street : "Street 45",
-  //   city : "San Andreas",
-  //   state : "Los Angeles",
-  //   country_id : 1,
-  // },
+    id: "2",
+    userID: "1",
+    street : "Street 45",
+    city : "San Andreas",
+    state : "Los Angeles",
+    country_id : "1",
+  }
   // {
   //   id: uuidv4(),
   //   userID: 
@@ -23,30 +23,31 @@ const Profile = [
 ];
 
 class ProfileService {
-  addAddress(id, userID, street, city, state, country_id) {
-    id = uuidv4();
-    const newprofile = new profile(id, userID, street, city, state, country_id);
-    Profile.push(newprofile);
-    return newprofile;
-  }
+  // addAddress(id, userID, street, city, state, country_id) {
+  //   id = uuidv4();
+  //   const newprofile = new profile(id, userID, street, city, state, country_id);
+  //   Profile.push(newprofile);
+  //   return newprofile;
+  // }
   
-  updateAddress(userID, addressID, street, city, state , country_id) {
-    const profileIndex = Profile.findIndex((profile) => profile.id === addressID && profile.userID === userID );
-    if (profileIndex === -1) return null;
-    const updatedprofile = {addressID, street, city, state , country_id };
-    Profile[profileIndex] = updatedprofile;
-    return updatedprofile;
-  }
+  // updateAddress(userID, addressID, street, city, state , country_id) {
+  //   const profileIndex = Profile.findIndex((profile) => profile.id === addressID && profile.userID === userID );
+  //   if (profileIndex === -1) return null;
+  //   const updatedprofile = {addressID, street, city, state , country_id };
+  //   Profile[profileIndex] = updatedprofile;
+  //   return updatedprofile;
+  // // }
 
-  removeAddress(addressID) {
-    const profileIndex = Profile.findIndex((profile) => profile.id === addressID);
-    if (profileIndex === -1) return false;
-    Profile.splice(profileIndex, 1);
-    return true;
-  }
+  // removeAddress(addressID) {
+  //   console.log(1)
+  //   // const profileIndex = profile.findIndex((profile) => profile.id === addressID);
+  //   // if (profileIndex === -1) return false;
+  //   // profile.splice(profileIndex, 1);
+  //   return true;
+  // }
 
   listAddress(userID) {
-    return Profile.map((profile) => new profileDTO(profile));
+    return profile.find((profile) => profile.userID === userID);
   }
 
 

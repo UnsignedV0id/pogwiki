@@ -11,6 +11,7 @@ class UserController {
     }
 
     getAllUsers(req, res) {
+        console.log("getAllUsers");
         const users = userService.findAll();
         res.json(users);
     }

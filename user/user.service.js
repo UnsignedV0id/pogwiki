@@ -14,6 +14,11 @@ const users = [
     email: "teste@2teste.com",
     password: "123456",
   },
+  {
+    id: "1",
+    email: "wow",
+    password: "123",
+  },
 ];
 
 class UserService {

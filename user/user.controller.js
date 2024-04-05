@@ -4,6 +4,19 @@ const userService = new UserService();
 const { GenericException } = require("../generic-exception.js");
 
 class UserController {
+    login(req, res) {
+        console.log ("caiu")
+        if(userService.login(req.body.user_email, req.body.user_password)){
+            res.status(200).send({msg:"usuario logado"})
+
+        }
+        else{
+                res.status(400).send({msg:"login incorreto (o.o)b"})
+            }
+        res.json(user);
+    }
+
+
     createUser(req, res) {
         const { id, email, password } = req.body;
         const user = userService.create(id, email, password);

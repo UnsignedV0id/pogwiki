@@ -22,6 +22,14 @@ const users = [
 ];
 
 class UserService {
+  login(user_email, user_password){
+    const usuario = users.find((user) => user.email === user_email)
+    if (usuario  <=  -1) { return false}
+      console.log(usuario);
+    if (usuario.password === user_password) {return true}
+    else {return false}
+  }
+
   findOne(id) {
     return users.find((user) => user.id === id);
   }

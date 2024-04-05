@@ -24,11 +24,11 @@ app.delete("/users/:id", (req, res) => userController.deleteUser(req, res));
 
 /* #region  Profile */
 const profileController = new ProfileController();
-app.post("/:id/addresses", (req, res) => profileController.addAddress(req, res));
-// app.put("/:id/addresses/:address_id", (req, res) => profileController.updateAddress(req, res));
+app.post("/:userID/addresses", (req, res) => profileController.addAddress(req, res));
 // app.delete("/:id/addresses/:address_id", (req, res) => profileController.removeAddress(req, res));
-app.get("/:id/addresses", (req, res) => profileController.listAddress(req, res));
-app.get("/TESTE", (req, res) => profileController.addAddress(req, res));
+app.get("/:userID/addresses", (req, res) => profileController.listAddress(req, res));
+app.get("/:userID/addresses/:address_id", (req, res) => profileController.listSingleAddress(req, res));
+app.put("/:userID/addresses/:address_id", (req, res) => profileController.updateAddress(req, res));
 /* #endregion */
 
 

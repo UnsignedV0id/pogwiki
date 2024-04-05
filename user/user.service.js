@@ -27,12 +27,14 @@ class UserService {
   }
 
   findAll() {
+    console.log(users);
     return users.map((user) => new UserDTO(user));
   }
 
   create(id, email, password) {
     id = uuidv4();
     const newUser = new User(id, email, password);
+    console.log(newUser)
     users.push(newUser);
     return newUser;
   }

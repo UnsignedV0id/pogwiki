@@ -5,7 +5,7 @@ const { GenericException } = require("../generic-exception.js");
 
 const profile = [
   {
-    id: "2",
+    id: "1",
     userID: "1",
     street : "Street 45",
     city : "San Andreas",
@@ -23,20 +23,22 @@ const profile = [
 ];
 
 class ProfileService {
-  // addAddress(id, userID, street, city, state, country_id) {
-  //   id = uuidv4();
-  //   const newprofile = new profile(id, userID, street, city, state, country_id);
-  //   Profile.push(newprofile);
-  //   return newprofile;
-  // }
-  
-  // updateAddress(userID, addressID, street, city, state , country_id) {
-  //   const profileIndex = Profile.findIndex((profile) => profile.id === addressID && profile.userID === userID );
-  //   if (profileIndex === -1) return null;
-  //   const updatedprofile = {addressID, street, city, state , country_id };
-  //   Profile[profileIndex] = updatedprofile;
-  //   return updatedprofile;
-  // // }
+  addAddress(id, userID, street, city, state, country_id) {
+    id = uuidv4();
+    const newProfile = new Profile(id, userID, street, city, state, country_id);
+    console.log(newProfile);
+    console.log("newProfile");
+    profile.push(newProfile);
+    return newProfile;
+  }
+
+  updateAddress(userID, address_id, street, city, state , country_id) {
+    const profileIndex = Profile.findIndex((profile) => profile.id === address_id && profile.userID === userID );
+    if (profileIndex === -1) return null;
+    const updatedprofile = { street, city, state , country_id };
+    Profile[profileIndex] = updatedprofile;
+    return updatedprofile;
+  }
 
   // removeAddress(addressID) {
   //   console.log(1)
@@ -47,7 +49,12 @@ class ProfileService {
   // }
 
   listAddress(userID) {
-    return profile.find((profile) => profile.userID === userID);
+    console.log(profile);
+    return profile.filter((profile) => profile.userID === userID);
+  }
+
+  listSingleAddress(userID, addressID) {
+    return profile.filter((profile) => profile.userID === userID && profile.id === addressID );
   }
 
 

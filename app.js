@@ -3,6 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const UserController = require("./user/user.controller.js");
 const ProfileController = require("./profile/profile.controller.js");
+const PageController = require("./page/page.controller.js");
 
 const app = express();
 const port = 3000;
@@ -32,6 +33,10 @@ app.get("/:userID/addresses/:address_id", (req, res) => profileController.listSi
 app.put("/:userID/addresses/:address_id", (req, res) => profileController.updateAddress(req, res));
 /* #endregion */
 
+/* #region  Page */
+const pageController = new PageController();
+app.post("/page", (req, res) => pageController.addPage(req, res));
+/* #endregion */
 
 
 app.listen(port, () => {

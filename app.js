@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const UserController = require("./user/user.controller.js");
 const ProfileController = require("./profile/profile.controller.js");
 const PageController = require("./page/page.controller.js");
+const CommentsController = require("./comments/comments.controller.js");
 
 const app = express();
 const port = 3000;
@@ -36,6 +37,11 @@ app.put("/:userID/addresses/:address_id", (req, res) => profileController.update
 /* #region  Page */
 const pageController = new PageController();
 app.post("/page", (req, res) => pageController.addPage(req, res));
+/* #endregion */
+
+/* #region  Comments */
+const commentsController = new CommentsController();
+app.post("/comments", (req, res) => commentsController.addComments(req, res));
 /* #endregion */
 
 

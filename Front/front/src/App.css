@@ -48,6 +48,7 @@ html, body {
 header {
   background-color: #000000;
   padding: 20px 0; 
+  display: inline-block;
 }
 
 .displayFlex {
@@ -92,4 +93,8 @@ article {
 
 nav a {
   display: block;
+}
+
+#mainHeader{
+  background-color: red;
 }

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { NestedMenuItem } from 'mui-nested-menu';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
 import { Button, Menu,MenuItem} from '@mui/material';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { useNavigate } from "react-router-dom";
@@ -23,25 +25,41 @@ function Header() {
 
   return (
     <header>
-      <div id="#mainHeader">
-      <div>
-
-            <Button onMouseOver={handleClick}>
-              Index
-            </Button>
-
-            <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-              <NestedMenuItem label="Primeiro Menu"parentMenuOpen={open}>
-                <MenuItem onClick= {() => routeChange("/sobre")}  >About!</MenuItem>
-                <MenuItem onClick= {() => routeChange("/servicos")}  >Servicos!</MenuItem>
-                <NestedMenuItem rightIcon={<ArrowRightIcon />} label="Prox Menu!"parentMenuOpen={open}>
-                  <MenuItem onClick={() => routeChange("/contato")}>Standard Menu Item!</MenuItem>
+      <div id="#mainHeader" style={{display:'inline-flex'}}>
+          <div id="#indexMenu">
+              <Button onMouseOver={handleClick}>
+                Index
+              </Button>
+              <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+                <NestedMenuItem label="Primeiro Menu"parentMenuOpen={open}>
+                  <MenuItem onClick= {() => routeChange("/sobre")}  >About!</MenuItem>
+                  <MenuItem onClick= {() => routeChange("/servicos")}  >Servicos!</MenuItem>
+                  <NestedMenuItem rightIcon={<ArrowRightIcon />} label="Prox Menu!"parentMenuOpen={open}>
+                    <MenuItem onClick={() => routeChange("/contato")}>Standard Menu Item!</MenuItem>
+                  </NestedMenuItem>
                 </NestedMenuItem>
-              </NestedMenuItem>
-            </Menu>
-
+              </Menu>
           </div>
-      </div>
+          <div id='#searchBar' style={{marginLeft:'10px'}}>
+              <Autocomplete
+                  disablePortal
+                  id="combo-box-demo"
+                  options={['1', '11','2','22']}
+                  sx={{
+                     width: 300 ,
+                     input: { color: 'red' },
+                     "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline":
+                      {
+                        borderColor: "primary.main",
+                      },
+                      "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "cyan", // Change to the desired hover color
+                     }
+                    }}
+                  renderInput={(params) => <TextField {...params} label="Pages" />}
+                />
+          </div>
+        </div>
     </header>
   );
 }

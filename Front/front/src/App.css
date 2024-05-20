@@ -47,7 +47,6 @@ html, body {
 
 header {
   background-color: #000000;
-  padding: 20px 0; 
   display: inline-block;
 }
 
@@ -80,14 +79,14 @@ nav {
 main {
   display: flex;
   flex: 1;
-  padding-bottom: 50px; 
+  /* padding-bottom: 50px;  */
   position: relative; 
 }
 
 article {
   flex-grow: 1; 
   padding: 20px;
-  background-color: #fff;
+  background-color: black;
   overflow-y: auto; 
 }
 

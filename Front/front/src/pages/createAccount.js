@@ -104,7 +104,7 @@ function CreateAccount() {
   return (
     <div style={styles.container}>
       <Typography variant="h4" gutterBottom>
-        Create Account
+        Criar Conta
       </Typography>
       <form onSubmit={handleSubmit}>
         <TextField

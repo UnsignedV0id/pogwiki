@@ -67,6 +67,18 @@ function Header() {
     },
   });
 
+  const options = [
+    { label: "Universo", value: "site2" },
+    { label: "Carrot", value: "site1" },
+    { label: "Frost", value: "site3" }
+  ];
+
+  const handleAutocompleteChange = (event, newValue) => {
+    if (newValue) {
+      navigate(`/${newValue.value}`);
+    }
+  };
+
   return (
     <header>
       <div
@@ -112,7 +124,10 @@ function Header() {
             <Autocomplete
               disablePortal
               id="combo-box-demo"
-              options={["1", "11", "2", "22"]}
+              options={options}
+              getOptionLabel={(option) => option.label}
+              isOptionEqualToValue={(option, value) => option.value === value}
+              onChange={handleAutocompleteChange}
               sx={{
                 width: 300,
                 input: { color: "white" },

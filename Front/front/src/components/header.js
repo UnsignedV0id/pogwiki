@@ -17,12 +17,18 @@ import LoginIcon from "@mui/icons-material/Login";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import MenuIcon from '@mui/icons-material/Menu';
+import axios from 'axios'; // Import axios
 
 import logo from "../images/logo.gif";
 
 function Header() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [showPassword, setShowPassword] = useState(false); // State to track password visibility
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [usernameError, setUsernameError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+
   const open = Boolean(anchorEl);
 
   const handleClick = (e) => setAnchorEl(e.currentTarget);
@@ -76,6 +82,44 @@ function Header() {
   const handleAutocompleteChange = (event, newValue) => {
     if (newValue) {
       navigate(`/${newValue.value}`);
+    }
+  };
+
+  const handleLoginClick = async () => {
+    // Reset error states
+    setUsernameError(false);
+    setPasswordError(false);
+
+    // Check for empty fields
+    if (username === '') {
+      setUsernameError(true);
+    }
+    if (password === '') {
+      setPasswordError(true);
+    }
+
+    // If both fields are filled, make the API call
+    if (username !== '' && password !== '') {
+      try {
+        const response = await axios.get('http://localhost:3000/user/1', {
+          // username,
+          // password,
+        }, {
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+
+        if (response.status === 200) {
+          // Handle successful login
+          console.log('Login successful', response.data);
+        } else {
+          // Handle login error
+          console.error('Login failed');
+        }
+      } catch (error) {
+        console.error('Error during login', error);
+      }
     }
   };
 
@@ -179,6 +223,10 @@ function Header() {
                 label="Login"
                 variant="standard"
                 fullWidth
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                error={usernameError}
+                helperText={usernameError ? 'Informe Login' : ''}
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -224,6 +272,10 @@ function Header() {
                   type={showPassword ? "text" : "password"} // Toggle between 'text' and 'password'
                   variant="standard"
                   fullWidth
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  error={passwordError}
+                  helperText={passwordError ? 'Informe senha' : ''}
                   InputLabelProps={{
                     shrink: true,
                   }}
@@ -273,7 +325,7 @@ function Header() {
                 variant="text"
                 style={{ color: "white" }} // Add custom style for white color
                 startIcon={<LoginIcon />}
-                onClick={() => routeChange("/login")}
+                onClick={handleLoginClick}
               >
                 Login
               </Button>

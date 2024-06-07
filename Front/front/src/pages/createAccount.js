@@ -1,4 +1,3 @@
-// Importando useState e Dialog como useStateDialog
 import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -9,6 +8,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
+import axios from "axios"; // Import axios
 
 function CreateAccount() {
   const [user, setUser] = useState("");
@@ -21,40 +21,50 @@ function CreateAccount() {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(true);
 
-    // Function to handle form submission
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      const fieldsToHighlight = [];
-      debugger;
-      if (password !== confirmPassword) {
-        setPasswordMatch(false);
-        fieldsToHighlight.push("confirmPassword");
-        return;
-      } else {
-        setPasswordMatch(true);//caso o usuarui erre a senha e em seguida acerte é necessario apertar o botao de confirmar duas vezes \
-        //pois mesmo chamando essa funçao a variavel nao é alterada para true
+  // Function to handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const fieldsToHighlight = [];
+
+    if (password !== confirmPassword) {
+      setPasswordMatch(false);
+      fieldsToHighlight.push("confirmPassword");
+      return;
+    } else {
+      setPasswordMatch(true);
+    }
+    if (!user) fieldsToHighlight.push("user");
+    if (!password) fieldsToHighlight.push("password");
+    if (!confirmPassword) fieldsToHighlight.push("confirmPassword");
+    if (!email) fieldsToHighlight.push("email");
+    if (!agreedTerms) fieldsToHighlight.push("agreedTerms");
+
+    setHighlightFields(fieldsToHighlight);
+
+    if (user && password && confirmPassword && email && agreedTerms && passwordMatch) {
+      try {
+        const response = await axios.get("http://localhost:3001/user");
+
+        if (response.status === 200) {
+          console.log(response)
+          // setUser("");
+          // setPassword("");
+          // setConfirmPassword("");
+          // setEmail("");
+          // setAgreedTerms(false);
+          // setHighlightFields([]);
+          // setOpenTermsDialog(false); // Close terms dialog if open
+          setShowConfirmation(true);
+        } else {
+          console.error("Failed to create account");
+        }
+      } catch (error) {
+        console.error("Error creating account", error);
       }
-      if (!user) fieldsToHighlight.push("user");
-      if (!password) fieldsToHighlight.push("password");
-      if (!confirmPassword) fieldsToHighlight.push("confirmPassword");
-      if (!email) fieldsToHighlight.push("email");
-      if (!agreedTerms) fieldsToHighlight.push("agreedTerms");
-  
-      setHighlightFields(fieldsToHighlight);
-  
-      if (user && password && confirmPassword && email && agreedTerms && passwordMatch) {
-        setUser("");
-        setPassword("");
-        setConfirmPassword("");
-        setEmail("");
-        setAgreedTerms(false);
-        setHighlightFields([]);
-        setOpenTermsDialog(false); // Close terms dialog if open
-        setShowConfirmation(true);
-      } else {
-        setShowConfirmation(false);
-      }
-    };
+    } else {
+      setShowConfirmation(false);
+    }
+  };
 
   const handleTermsDialogOpen = () => {
     setOpenTermsDialog(true);
@@ -196,7 +206,7 @@ function CreateAccount() {
           style={{ color: "#fff" }}
         />
         <Button
-          type=" "
+          type="submit"
           variant="outlined"
           style={styles.button}
           disabled={!agreedTerms} // Disable button if terms are not agreed or passwords don't match

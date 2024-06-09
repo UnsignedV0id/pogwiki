@@ -20,7 +20,7 @@ let AuthController = class AuthController {
         this.authService = authService;
     }
     async login(loginDto) {
-        const user = await this.authService.validateUser(loginDto.email, loginDto.senha);
+        const user = await this.authService.validateUser(loginDto.nome, loginDto.senha);
         if (!user) {
             throw new common_1.NotFoundException('Credenciais inválidas');
         }

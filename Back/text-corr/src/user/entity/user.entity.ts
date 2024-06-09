@@ -15,6 +15,9 @@ export class User {
   @Column()
   senha: string;
 
+  @Column({default : 0})//0 - Commom , 1- ADM
+  tipo: number;
+
   @OneToMany(() => Pages, (pages) => pages.user) // esta linha foi adicionada
   pages: Pages[]; // esta linha foi adicionada
 }

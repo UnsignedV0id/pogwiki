@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import { NestedMenuItem } from "mui-nested-menu";
+import { jwtDecode } from "jwt-decode";
 import {
   Button,
   Menu,
@@ -16,8 +17,9 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import LoginIcon from "@mui/icons-material/Login";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import MenuIcon from '@mui/icons-material/Menu';
-import axios from 'axios'; // Import axios
+import MenuIcon from "@mui/icons-material/Menu";
+import LogoutIcon from "@mui/icons-material/Logout";
+import axios from 'axios';
 
 import logo from "../images/logo.gif";
 
@@ -28,6 +30,8 @@ function Header() {
   const [password, setPassword] = useState('');
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // New state for login status
+  const [loggedInUser, setLoggedInUser] = useState(''); // New state for the logged-in user name
 
   const open = Boolean(anchorEl);
 
@@ -35,7 +39,7 @@ function Header() {
   const handleClose = () => setAnchorEl(null);
 
   let navigate = useNavigate();
-  const routeChange = function (path) {
+  const routeChange = (path) => {
     handleClose();
     navigate(path);
   };
@@ -85,6 +89,20 @@ function Header() {
     }
   };
 
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        console.log(decodedToken);
+        setLoggedInUser(decodedToken.username); // Assuming 'nome' is the user's name in the token
+        setIsLoggedIn(true);
+      } catch (error) {
+        console.error('Invalid token:', error);
+      }
+    }
+  }, []);
+
   const handleLoginClick = async () => {
     // Reset error states
     setUsernameError(false);
@@ -101,26 +119,41 @@ function Header() {
     // If both fields are filled, make the API call
     if (username !== '' && password !== '') {
       try {
-        const response = await axios.get('http://localhost:3000/user/1', {
-          // username,
-          // password,
-        }, {
-          headers: {
-            'Content-Type': 'application/json',
-          }
+        const response = await axios.post("http://localhost:3001/auth/login", {
+          nome: username,  // Passa o estado do nome
+          senha: password,  // Passa o estado da senha
         });
 
-        if (response.status === 200) {
+        if (response.status === 201) {
           // Handle successful login
           console.log('Login successful', response.data);
+          const token = response.data?.access_token;
+          if (token) {
+            // Armazena o token no localStorage
+            localStorage.setItem("token", response.data.access_token);
+            // Atualiza o estado para mostrar que o usuário está logado
+            setIsLoggedIn(true);
+            setLoggedInUser(username);
+          } else {
+            // Lança um erro se o token não estiver presente na resposta
+            throw new Error("Token não encontrado na resposta");
+          }
         } else {
           // Handle login error
-          console.error('Login failed');
+          console.error('Login failed', response.data);
         }
       } catch (error) {
         console.error('Error during login', error);
       }
     }
+  };
+
+  const handleLogoutClick = () => {
+    // Limpa o token do localStorage
+    localStorage.removeItem('token');
+    // Atualiza o estado para mostrar que o usuário está deslogado
+    setIsLoggedIn(false);
+    setLoggedInUser('');
   };
 
   return (
@@ -208,74 +241,38 @@ function Header() {
           />
         </div>
         <div style={{ display: "flex", alignItems: "center" }}>
-          <ThemeProvider theme={LoginTheme}>
-            <div
-              id="LoginArea"
-              style={{
-                marginRight: "10px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-              }}
-            >
-              <TextField
-                id="Login"
-                label="Login"
-                variant="standard"
-                fullWidth
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                error={usernameError}
-                helperText={usernameError ? 'Informe Login' : ''}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                sx={{
-                  input: { color: "white" },
-                  "& .MuiInput-underline:before": {
-                    borderBottom: "2px solid white",
-                  },
-                  "& .MuiInput-underline:hover:before": {
-                    borderBottom: "2px solid gray",
-                  },
-                  "& .MuiInput-underline:after": {
-                    borderBottom: "2px solid white",
-                  },
-                  "&:hover:not(.Mui-disabled, .Mui-error):before": {
-                    borderBottom: "2px solid gray",
-                  },
-                }}
-              />
-              <Typography
-                variant="body2"
-                sx={{ color: "white", cursor: "pointer" }}
-                onClick={() => routeChange("/createAccount")}
-              >
-                Criar nova conta
+          {isLoggedIn ? (
+            <>
+              <Typography variant="h6" style={{ color: "white", marginRight: '10px' }}>
+                {loggedInUser}
               </Typography>
-            </div>
-            <div
-              id="SenhaArea"
-              style={{ display: "flex", alignItems: "center" }}
-            >
+              <IconButton 
+                style={{ color: "white" }}
+                onClick={handleLogoutClick}
+              >
+                <LogoutIcon />
+              </IconButton>
+            </>
+          ) : (
+            <ThemeProvider theme={LoginTheme}>
               <div
+                id="LoginArea"
                 style={{
+                  marginRight: "10px",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "flex-start",
-                  marginRight: "10px",
                 }}
               >
                 <TextField
-                  id="Senha"
-                  label="Senha"
-                  type={showPassword ? "text" : "password"} // Toggle between 'text' and 'password'
+                  id="Login"
+                  label="Login"
                   variant="standard"
                   fullWidth
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  error={passwordError}
-                  helperText={passwordError ? 'Informe senha' : ''}
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  error={usernameError}
+                  helperText={usernameError ? 'Informe Login' : ''}
                   InputLabelProps={{
                     shrink: true,
                   }}
@@ -294,43 +291,93 @@ function Header() {
                       borderBottom: "2px solid gray",
                     },
                   }}
-                  InputProps={{
-                    // Add InputProps for visibility toggle
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          onClick={() => setShowPassword(!showPassword)} // Toggle password visibility
-                          edge="end"
-                          sx={{ color: "white" }}
-                        >
-                          {showPassword ? (
-                            <VisibilityIcon />
-                          ) : (
-                            <VisibilityOffIcon />
-                          )}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
                 />
                 <Typography
                   variant="body2"
                   sx={{ color: "white", cursor: "pointer" }}
-                  onClick={() => routeChange("/recoverAccount")}
+                  onClick={() => routeChange("/createAccount")}
                 >
-                  Esqueci senha
+                  Criar nova conta
                 </Typography>
               </div>
-              <Button
-                variant="text"
-                style={{ color: "white" }} // Add custom style for white color
-                startIcon={<LoginIcon />}
-                onClick={handleLoginClick}
+              <div
+                id="SenhaArea"
+                style={{ display: "flex", alignItems: "center" }}
               >
-                Login
-              </Button>
-            </div>
-          </ThemeProvider>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    marginRight: "10px",
+                  }}
+                >
+                  <TextField
+                    id="Senha"
+                    label="Senha"
+                    type={showPassword ? "text" : "password"} // Toggle between 'text' and 'password'
+                    variant="standard"
+                    fullWidth
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    error={passwordError}
+                    helperText={passwordError ? 'Informe senha' : ''}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    sx={{
+                      input: { color: "white" },
+                      "& .MuiInput-underline:before": {
+                        borderBottom: "2px solid white",
+                      },
+                      "& .MuiInput-underline:hover:before": {
+                        borderBottom: "2px solid gray",
+                      },
+                      "& .MuiInput-underline:after": {
+                        borderBottom: "2px solid white",
+                      },
+                      "&:hover:not(.Mui-disabled, .Mui-error):before": {
+                        borderBottom: "2px solid gray",
+                      },
+                    }}
+                    InputProps={{
+                      // Add InputProps for visibility toggle
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={() => setShowPassword(!showPassword)} // Toggle password visibility
+                            edge="end"
+                            sx={{ color: "white" }}
+                          >
+                            {showPassword ? (
+                              <VisibilityIcon />
+                            ) : (
+                              <VisibilityOffIcon />
+                            )}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                  <Typography
+                    variant="body2"
+                    sx={{ color: "white", cursor: "pointer" }}
+                    onClick={() => routeChange("/recoverAccount")}
+                  >
+                    Esqueci senha
+                  </Typography>
+                </div>
+                <Button
+                  variant="text"
+                  style={{ color: "white" }} // Add custom style for white color
+                  startIcon={<LoginIcon />}
+                  onClick={handleLoginClick}
+                >
+                  Login
+                </Button>
+              </div>
+            </ThemeProvider>
+          )}
         </div>
       </div>
     </header>

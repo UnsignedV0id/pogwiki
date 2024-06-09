@@ -7,8 +7,8 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('login')
-  async login(@Body() loginDto: {email: string, senha: string}) {
-    const user = await this.authService.validateUser(loginDto.email, loginDto.senha);
+  async login(@Body() loginDto: {nome: string, senha: string}) {
+    const user = await this.authService.validateUser(loginDto.nome, loginDto.senha);
     if (!user) {
       throw new NotFoundException('Credenciais inválidas');
     }

@@ -23,12 +23,11 @@ let UserService = class UserService {
         this.userRepository = userRepository;
     }
     async findAll() {
-        return await this.userRepository.find({ relations: ["filiacoes"] });
+        return await this.userRepository.find();
     }
     async findOne(id) {
         const user = await this.userRepository.findOne({
-            where: { id_user: id },
-            relations: ["filiacoes"],
+            where: { id_user: id }
         });
         if (!user) {
             throw new common_1.HttpException(`Usuário não encontrado.`, common_1.HttpStatus.NOT_FOUND);
@@ -47,7 +46,8 @@ let UserService = class UserService {
                 throw new common_1.HttpException("Email já registrado.", common_1.HttpStatus.BAD_REQUEST);
             }
             else {
-                throw new common_1.HttpException("Erro ao criar o registro. Tente novamente mais tarde.", common_1.HttpStatus.INTERNAL_SERVER_ERROR);
+                debugger;
+                throw new common_1.HttpException(error.code, common_1.HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
     }

@@ -24,8 +24,8 @@ let AuthService = class AuthService {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
     }
-    async validateUser(email, senha) {
-        const user = await this.userRepository.findOne({ where: { email } });
+    async validateUser(nome, senha) {
+        const user = await this.userRepository.findOne({ where: { nome } });
         if (user && await bcrypt.compare(senha, user.senha)) {
             const { senha, ...result } = user;
             return result;
@@ -33,7 +33,7 @@ let AuthService = class AuthService {
         return null;
     }
     async login(user) {
-        const payload = { username: user.email, sub: user.id_user };
+        const payload = { username: user.nome, id: user.id_user };
         return {
             access_token: this.jwtService.sign(payload),
         };

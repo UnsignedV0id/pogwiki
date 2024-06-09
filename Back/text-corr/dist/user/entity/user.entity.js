@@ -32,6 +32,10 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "senha", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ default: 0 }),
+    __metadata("design:type", Number)
+], User.prototype, "tipo", void 0);
+__decorate([
     (0, typeorm_1.OneToMany)(() => pages_entity_1.Pages, (pages) => pages.user),
     __metadata("design:type", Array)
 ], User.prototype, "pages", void 0);

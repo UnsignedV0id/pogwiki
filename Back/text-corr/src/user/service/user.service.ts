@@ -13,13 +13,12 @@ export class UserService {
   ) {}
 
   async findAll(): Promise<User[]> {
-    return await this.userRepository.find({ relations: ["filiacoes"] });
+    return await this.userRepository.find();
   }
 
   async findOne(id: number): Promise<User> {
     const user = await this.userRepository.findOne({
-      where: { id_user: id },
-      relations: ["filiacoes"],
+      where: { id_user: id }
     });
 
     if (!user) {
@@ -40,8 +39,9 @@ export class UserService {
       if (error.code === "ER_DUP_ENTRY") {
         throw new HttpException("Email já registrado.", HttpStatus.BAD_REQUEST);
       } else {
+        debugger;
         throw new HttpException(
-          "Erro ao criar o registro. Tente novamente mais tarde.",
+          error.code,
           HttpStatus.INTERNAL_SERVER_ERROR
         );
       }

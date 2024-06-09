@@ -16,18 +16,26 @@ exports.PagesService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
-const user_service_1 = require("./../../user/service/user.service");
 const pages_entity_1 = require("../entity/pages.entity");
+const user_service_1 = require("../../user/service/user.service");
 let PagesService = class PagesService {
     constructor(pagesRepository, userService) {
         this.pagesRepository = pagesRepository;
         this.userService = userService;
     }
     async create(createPagesDto) {
-        return;
+        const creator = await this.userService.findOne(createPagesDto.creator);
+        if (!creator) {
+            throw new common_1.NotFoundException(`Usuário não encontrado.`);
+        }
+        const newPages = this.pagesRepository.create({
+            ...createPagesDto,
+            user: creator,
+        });
+        return await this.pagesRepository.save(newPages);
     }
     async findAll() {
-        return await this.userService.findAll();
+        return await this.pagesRepository.find();
     }
     async findOne(id) {
         const pages = await this.pagesRepository.findOne({

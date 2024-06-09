@@ -76,4 +76,4 @@ exports.PagesController = PagesController = __decorate([
     (0, common_1.Controller)('pages'),
     __metadata("design:paramtypes", [pages_service_1.PagesService])
 ], PagesController);
-//# sourceMappingURL=pages.js.map
+//# sourceMappingURL=pages.controller.js.map

@@ -1,10 +1,9 @@
-import { User } from "./../../user/entity/user.entity";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { UserService } from "./../../user/service/user.service";
 import { Pages } from "../entity/pages.entity";
 import { CreatePagesDto, UpdatePagesDto } from "../dto/pages.dto";
+import { UserService } from "src/user/service/user.service";
 
 @Injectable()
 export class PagesService {
@@ -15,19 +14,19 @@ export class PagesService {
   ) {}
 
   async create(createPagesDto: CreatePagesDto): Promise<Pages> {
-    // const user = await this.userService.findOne(createPagesDto.userId);
-    // if (!user) {
-    //   throw new NotFoundException(`Usuário não encontrado.`);
-    // }
-    // const newPages = this.pagesRepository.create({
-    //   ...createPagesDto,
-    //   creator: user, // Associando o usuário encontrado ao novo registro de pagina
-    // });
-    return //await this.pagesRepository.save(newPages);
+    const creator = await this.userService.findOne(createPagesDto.creator);
+    if (!creator) {
+      throw new NotFoundException(`Usuário não encontrado.`);
+      }
+    const newPages = this.pagesRepository.create({
+      ...createPagesDto,
+      user: creator, // Associando o usuário encontrado ao novo registro de pagina
+    });
+    return await this.pagesRepository.save(newPages);
   }
 
-  async findAll(): Promise<User[]> {
-    return await this.userService.findAll();
+  async findAll(): Promise<Pages[]> {
+    return await this.pagesRepository.find();
   }
 
   async findOne(id: number): Promise<Pages> {

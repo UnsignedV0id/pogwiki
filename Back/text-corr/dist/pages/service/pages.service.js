@@ -37,6 +37,21 @@ let PagesService = class PagesService {
     async findAll() {
         return await this.pagesRepository.find();
     }
+    async fillModerationData() {
+        return await this.pagesRepository.query("SELECT A.*, B.nome FROM pages AS A, user AS B WHERE A.creator = B.id_user");
+    }
+    async fillUserCreatedPages(userId) {
+        return await this.pagesRepository.query(`SELECT A.*  FROM pages AS A WHERE A.creator = ${userId}`);
+    }
+    async findAllApproved() {
+        const pages = await this.pagesRepository.find({
+            where: { state: 2 },
+        });
+        if (!pages) {
+            throw new common_1.NotFoundException(`Pagina não encontrada.`);
+        }
+        return pages;
+    }
     async findOne(id) {
         const pages = await this.pagesRepository.findOne({
             where: { id_pages: id },

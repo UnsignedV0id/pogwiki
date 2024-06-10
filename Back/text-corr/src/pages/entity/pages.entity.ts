@@ -13,7 +13,7 @@ export class Pages {
   content: string;
 
   @Column({ type: 'int' , default : 0})
-  state: number; // 0 - created , 1 - rejected , 2 - approved 
+  state: number; // 0 - created , 1 - rejected , 2 - approved , 3 - waitingRevision , 4 updated revision
   
   @Column({default : 'newly added'})
   stateText: string; 

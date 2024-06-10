@@ -1,4 +1,4 @@
-import { IsInt, IsString, Length } from 'class-validator';
+import { IsInt, IsOptional, IsString, Length, isInt } from 'class-validator';
 import { PartialType } from '@nestjs/mapped-types';
 
 export class CreatePagesDto {
@@ -8,9 +8,18 @@ export class CreatePagesDto {
 
   @IsString()
   content: string;
-  
+
   @IsInt()
   creator: number;
-}
+
+  @IsString()
+  @IsOptional()
+  stateText: string;
+
+  @IsInt()
+  @IsOptional()
+  state: number;
+
+  }
 
 export class UpdatePagesDto extends PartialType(CreatePagesDto) {}

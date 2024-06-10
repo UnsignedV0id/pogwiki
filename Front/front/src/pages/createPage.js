@@ -2,28 +2,20 @@ import React, { useState } from "react";
 import {
   TextField,
   Typography,
-  Autocomplete,
-  Chip,
   Button,
 } from "@mui/material";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
 
 function CreatePage() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [categories, setCategories] = useState([]);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   
-
-  const categoryOptions = [
-    { title: "Tecnologia" },
-    { title: "Ciência" },
-    { title: "Arte" },
-    { title: "Negócios" },
-    { title: "Saúde" },
-    { title: "Educação" },
-  ];
-
   const styles = {
     container: {
       backgroundColor: "#191919",
@@ -51,27 +43,45 @@ function CreatePage() {
     },
   };
 
+
+  const handleCloseConfirmation = () => {
+    setShowConfirmation(false);
+    // Limpar os campos de entrada
+    setTitle("");
+    setContent("");
+  };
+
+
   const handleSave = async () => {
     try {
       // Recupera o token do localStorage
       const token = localStorage.getItem("token");
       const userid = jwtDecode(token).id;
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}` // O token é prefixado com 'Bearer'
+        }
+      };
+
       const data = {
         title: title,
         content: content,
-        creator: userid,
+        creator : 99999 // conferir
       };
-      console.log("token: ", token);
-      // Faz a requisição com o header de autenticação
-      const response = await axios.post("http://localhost:3001/pages", data);
+      
+      // console.log("token: ", token);
+      const response = await axios.post("http://localhost:3001/pages", data, config);
 
-      console.log(response);
+      if (response.status === 201 ) {
+        setShowConfirmation(true);
+      }
 
     } catch (err) {
       if (err.response && err.response.status === 404) {
         console.log("Recurso não encontrado (404).");
       } else {
-        console.log(err.response);
+        console.log(err);
       }
     }
   };
@@ -111,7 +121,24 @@ function CreatePage() {
       <Button variant="outlined" style={styles.button} onClick={handleSave}>
         Salvar
       </Button>
+
+      <Dialog open={showConfirmation} onClose={handleCloseConfirmation}>
+        <DialogTitle>Nova pagina!</DialogTitle>
+        <DialogContent>
+          <Typography>
+          |{title}| criada com sucesso.
+          </Typography>
+          <Typography>
+            Aguarde a aprovação de um adm.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseConfirmation}>Eba!</Button>
+        </DialogActions>
+      </Dialog>
+
     </div>
+
   );
 }
 

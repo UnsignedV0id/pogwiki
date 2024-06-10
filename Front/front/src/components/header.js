@@ -30,8 +30,10 @@ function Header() {
   const [password, setPassword] = useState('');
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // New state for login status
-  const [loggedInUser, setLoggedInUser] = useState(''); // New state for the logged-in user name
+  const [isLoggedIn, setIsLoggedIn] = useState(false); 
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [loggedInUser, setLoggedInUser] = useState('');
+  const [options, setOptions] = useState([]);
 
   const open = Boolean(anchorEl);
 
@@ -77,26 +79,37 @@ function Header() {
     },
   });
 
-  const options = [
-    { label: "Universo", value: "site2" },
-    { label: "Carrot", value: "site1" },
-    { label: "Frost", value: "site3" }
-  ];
+
 
   const handleAutocompleteChange = (event, newValue) => {
     if (newValue) {
-      navigate(`/${newValue.value}`);
+      navigate(`pages/${newValue.value}`);
     }
   };
 
   useEffect(() => {
+
+    //pegar array de paginas existentes
+    axios.get('http://localhost:3001/pages/approved')
+    .then(response => {
+    let tempData  = response.data.map(({ id_pages, title }) => ({ value: id_pages, label: title }));;
+
+    setOptions(tempData);
+    })
+    .catch(error => {
+    console.error('Error fetching options:', error);
+    });
+
     const token = localStorage.getItem('token');
+
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
-        console.log(decodedToken);
-        setLoggedInUser(decodedToken.username); // Assuming 'nome' is the user's name in the token
+        
+        setLoggedInUser(decodedToken.username); 
+        setIsAdmin(decodedToken.type == 1 ); 
         setIsLoggedIn(true);
+        
       } catch (error) {
         console.error('Invalid token:', error);
       }
@@ -134,6 +147,7 @@ function Header() {
             // Atualiza o estado para mostrar que o usuário está logado
             setIsLoggedIn(true);
             setLoggedInUser(username);
+            window.location.reload();
           } else {
             // Lança um erro se o token não estiver presente na resposta
             throw new Error("Token não encontrado na resposta");
@@ -153,6 +167,7 @@ function Header() {
     localStorage.removeItem('token');
     // Atualiza o estado para mostrar que o usuário está deslogado
     setIsLoggedIn(false);
+    setIsAdmin(false);
     setLoggedInUser('');
   };
 
@@ -175,26 +190,34 @@ function Header() {
               startIcon={<MenuIcon />}
               onMouseOver={handleClick}
             >
-              Index
+              Menu
             </Button>
             <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-              <NestedMenuItem label="Primeiro Menu" parentMenuOpen={open}>
-                <MenuItem onClick={() => routeChange("/sobre")}>
-                  About!
+            {isLoggedIn && ( //Caso logado
+              <NestedMenuItem label="Paginas" parentMenuOpen={open}>
+                <MenuItem onClick={() => routeChange("/createPage")}>
+                  Criar Paginas
                 </MenuItem>
-                <MenuItem onClick={() => routeChange("/servicos")}>
-                  Servicos!
+                <MenuItem onClick={() => routeChange("/myPages")}>
+                  Minhas paginas
                 </MenuItem>
-                <NestedMenuItem
+                {isAdmin && ( //Caso adm
+                  <MenuItem onClick={() => routeChange("/moderatePages")}>
+                    Moderar Páginas
+                  </MenuItem>
+                )}
+                {/* <NestedMenuItem
                   rightIcon={<ArrowRightIcon />}
                   label="Prox Menu!"
                   parentMenuOpen={open}
                 >
-                  <MenuItem onClick={() => routeChange("/contato")}>
-                    Standard Menu Item!
-                  </MenuItem>
-                </NestedMenuItem>
+
+                </NestedMenuItem> */}
               </NestedMenuItem>
+            )}
+            <MenuItem onClick={() => routeChange("/contato")}>
+              Contato
+            </MenuItem>
             </Menu>
           </div>
           <div id="#searchBar" style={{ marginLeft: "110px" }}>
@@ -240,10 +263,10 @@ function Header() {
             onClick={() => routeChange("/")}
           />
         </div>
-        <div style={{ display: "flex", alignItems: "center" }}>
+        <div style={{ display: "flex", alignItems: "center" , width:'530px'}}>
           {isLoggedIn ? (
             <>
-              <Typography variant="h6" style={{ color: "white", marginRight: '10px' }}>
+              <Typography variant="h6" style={{ color: "white", marginLeft: 'auto' }}>
                 {loggedInUser}
               </Typography>
               <IconButton 

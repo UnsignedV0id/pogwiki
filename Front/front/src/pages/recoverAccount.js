@@ -6,16 +6,29 @@ import Typography from "@mui/material/Typography";
 function RecoverAccount() {
   const [email, setEmail] = useState("");
   const [recoveryMessage, setRecoveryMessage] = useState("");
+  const [emailError, setEmailError] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add logic to send recovery email
-    setRecoveryMessage(`Instruções para recuperação da senha enviadas para:  ${email}`);
-    // Simulating the email sending process
-    setTimeout(() => {
+    if (!validateEmail(email)) {
+      setEmailError(true);
       setRecoveryMessage("");
-      setEmail("");
-    }, 3000);
+    } else {
+      setEmailError(false);
+      // Add logic to send recovery email
+      setRecoveryMessage(`Instruções para recuperação da senha enviadas para:  ${email}`);
+      // Simulating the email sending process
+      setTimeout(() => {
+        setRecoveryMessage("");
+        setEmail("");
+      }, 3000);
+    }
+  };
+
+  const validateEmail = (email) => {
+    // Expressão regular para validar o formato do e-mail
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   };
 
   const styles = {
@@ -54,6 +67,8 @@ function RecoverAccount() {
           margin="normal"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          error={emailError}
+          helperText={emailError ? 'Informe um e-mail válido' : ''}
           style={styles.textField}
           InputLabelProps={{ style: { color: "#faf0e6", shrink: true } }}
           InputProps={{ style: styles.input }}

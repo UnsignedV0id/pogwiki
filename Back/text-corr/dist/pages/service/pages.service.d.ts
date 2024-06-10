@@ -8,6 +8,9 @@ export declare class PagesService {
     constructor(pagesRepository: Repository<Pages>, userService: UserService);
     create(createPagesDto: CreatePagesDto): Promise<Pages>;
     findAll(): Promise<Pages[]>;
+    fillModerationData(): Promise<Pages[]>;
+    fillUserCreatedPages(userId: any): Promise<Pages[]>;
+    findAllApproved(): Promise<Pages[]>;
     findOne(id: number): Promise<Pages>;
     update(id: number, updatePagesDto: UpdatePagesDto): Promise<Pages>;
     remove(id: number): Promise<void>;

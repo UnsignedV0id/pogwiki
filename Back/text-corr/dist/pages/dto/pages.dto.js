@@ -28,6 +28,16 @@ __decorate([
     (0, class_validator_1.IsInt)(),
     __metadata("design:type", Number)
 ], CreatePagesDto.prototype, "creator", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreatePagesDto.prototype, "stateText", void 0);
+__decorate([
+    (0, class_validator_1.IsInt)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Number)
+], CreatePagesDto.prototype, "state", void 0);
 class UpdatePagesDto extends (0, mapped_types_1.PartialType)(CreatePagesDto) {
 }
 exports.UpdatePagesDto = UpdatePagesDto;

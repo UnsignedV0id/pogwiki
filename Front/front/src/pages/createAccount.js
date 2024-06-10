@@ -43,9 +43,15 @@ function CreateAccount() {
 
     if (user && password && confirmPassword && email && agreedTerms && passwordMatch) {
       try {
-        const response = await axios.get("http://localhost:3001/user");
+        const data = {
+          nome: user,
+          email: email,
+          senha : password 
+        };
+        
+        const response = await axios.post("http://localhost:3001/user",data);
 
-        if (response.status === 200) {
+        if (response.status === 201 ) {
           console.log(response)
           // setUser("");
           // setPassword("");
@@ -231,14 +237,14 @@ function CreateAccount() {
       </Dialog>
 
       <Dialog open={showConfirmation} onClose={handleCloseConfirmation}>
-        <DialogTitle>Confirmation</DialogTitle>
+        <DialogTitle>Usuario criado com sucesso</DialogTitle>
         <DialogContent>
           <Typography>
-            A confirmation email has been sent to {email}.
+            Confirmação enviada para: {email}
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseConfirmation}>Close</Button>
+          <Button onClick={handleCloseConfirmation}>Home</Button>
         </DialogActions>
       </Dialog>
     </div>

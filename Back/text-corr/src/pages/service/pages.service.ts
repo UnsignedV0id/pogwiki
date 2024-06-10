@@ -29,6 +29,24 @@ export class PagesService {
     return await this.pagesRepository.find();
   }
 
+  async fillModerationData(): Promise<Pages[]> {
+    return await this.pagesRepository.query("SELECT A.*, B.nome FROM pages AS A, user AS B WHERE A.creator = B.id_user");
+  }
+
+  async fillUserCreatedPages(userId): Promise<Pages[]> {
+    return await this.pagesRepository.query(`SELECT A.*  FROM pages AS A WHERE A.creator = ${userId}`);
+  }
+
+  async findAllApproved(): Promise<Pages[]> {
+    const pages = await this.pagesRepository.find({
+      where: { state: 2 },
+    });
+    if (!pages) {
+      throw new NotFoundException(`Pagina não encontrada.`);
+    }
+    return pages;
+  }
+
   async findOne(id: number): Promise<Pages> {
     const pages = await this.pagesRepository.findOne({
       where: { id_pages: id },

@@ -168,7 +168,7 @@ function MyPages() {
     <ThemeProvider theme={darkTheme}>
       <div>
         <Typography variant="h4" gutterBottom style={{ color: "#ffffff" }}>
-          Moderação de páginas
+          Minhas páginas
         </Typography>
         <div style={{ marginBottom: "20px", display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
   <Typography variant="body2" style={{ marginRight: "10px", color: "#ffffff" }}>

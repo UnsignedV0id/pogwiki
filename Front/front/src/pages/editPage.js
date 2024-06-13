@@ -1,17 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom"; // Importe useNavigate
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Box, Typography, TextField, Button, Snackbar } from "@mui/material";
+import ReactMde from 'react-mde';
+import * as Showdown from 'showdown';
+import 'react-mde/lib/styles/css/react-mde-all.css';
 import { jwtDecode } from "jwt-decode";
 
 function EditPage() {
   const { id } = useParams();
-  const navigate = useNavigate(); // Utilize useNavigate para navegação
+  const navigate = useNavigate();
   const [pageTitle, setPageTitle] = useState("");
   const [pageContent, setPageContent] = useState("");
   const [editedTitle, setEditedTitle] = useState("");
   const [editedContent, setEditedContent] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [selectedTab, setSelectedTab] = useState("write");
+  const converter = new Showdown.Converter({tables: true, simplifiedAutoLink: true});
 
   useEffect(() => {
     axios.get(`http://localhost:3001/pages/${id}`)
@@ -31,8 +36,8 @@ function EditPage() {
     setEditedTitle(event.target.value);
   };
 
-  const handleContentChange = (event) => {
-    setEditedContent(event.target.value);
+  const handleContentChange = (value) => {
+    setEditedContent(value);
   };
 
   const handleSave = async () => {
@@ -56,7 +61,7 @@ function EditPage() {
       if (response.status === 200 ) {
         setOpenSnackbar(true);
         setTimeout(() => {
-          navigate(-1); // Use navigate para redirecionar
+          navigate(-1);
         }, 3000);
       }
 
@@ -107,16 +112,14 @@ function EditPage() {
           InputProps={{ style: { ...styles.input, outline: "none" } }}
           InputLabelProps={{ style: styles.blueText }}
         />
-        <TextField
-          label="Conteúdo"
+        <ReactMde
           value={editedContent}
           onChange={handleContentChange}
-          multiline
-          rows={4}
-          fullWidth
-          style={styles.textField}
-          InputProps={{ style: { ...styles.input, outline: "none" } }}
-          InputLabelProps={{ style: styles.blueText }}
+          selectedTab={selectedTab}
+          onTabChange={setSelectedTab}
+          generateMarkdownPreview={(markdown) =>
+            Promise.resolve(converter.makeHtml(markdown))
+          }
         />
         <Button variant="outlined" onClick={handleSave} style={styles.button}>
           Editar

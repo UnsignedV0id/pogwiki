@@ -10,11 +10,15 @@ import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
+import ReactMde from 'react-mde';
+import * as Showdown from 'showdown';
+import 'react-mde/lib/styles/css/react-mde-all.css';
 
 function CreatePage() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const converter = new Showdown.Converter({tables: true, simplifiedAutoLink: true});
   
   const styles = {
     container: {
@@ -43,40 +47,34 @@ function CreatePage() {
     },
   };
 
-
   const handleCloseConfirmation = () => {
     setShowConfirmation(false);
-    // Limpar os campos de entrada
     setTitle("");
     setContent("");
   };
 
-
   const handleSave = async () => {
     try {
-      // Recupera o token do localStorage
       const token = localStorage.getItem("token");
       const userid = jwtDecode(token).id;
 
       const config = {
         headers: {
-          Authorization: `Bearer ${token}` // O token é prefixado com 'Bearer'
+          Authorization: `Bearer ${token}`
         }
       };
 
       const data = {
         title: title,
         content: content,
-        creator : 99999 // conferir
+        creator : 99999
       };
       
-      // console.log("token: ", token);
       const response = await axios.post("http://localhost:3001/pages", data, config);
 
-      if (response.status === 201 ) {
+      if (response.status === 201) {
         setShowConfirmation(true);
       }
-
     } catch (err) {
       if (err.response && err.response.status === 404) {
         console.log("Recurso não encontrado (404).");
@@ -104,18 +102,14 @@ function CreatePage() {
         InputProps={{ style: styles.input }}
       />
 
-      <TextField
-        label="Conteúdo"
-        variant="outlined"
-        fullWidth
-        multiline
-        rows={4}
+      <ReactMde
         value={content}
-        onChange={(e) => setContent(e.target.value)}
-        margin="normal"
-        style={styles.textField}
-        InputLabelProps={{ style: styles.label }}
-        InputProps={{ style: styles.input }}
+        onChange={setContent}
+        selectedTab="write"
+        onTabChange={() => {}}
+        generateMarkdownPreview={(markdown) =>
+          Promise.resolve(converter.makeHtml(markdown))
+        }
       />
 
       <Button variant="outlined" style={styles.button} onClick={handleSave}>
@@ -123,10 +117,10 @@ function CreatePage() {
       </Button>
 
       <Dialog open={showConfirmation} onClose={handleCloseConfirmation}>
-        <DialogTitle>Nova pagina!</DialogTitle>
+        <DialogTitle>Nova página!</DialogTitle>
         <DialogContent>
           <Typography>
-          |{title}| criada com sucesso.
+            |{title}| criada com sucesso.
           </Typography>
           <Typography>
             Aguarde a aprovação de um adm.
@@ -136,9 +130,7 @@ function CreatePage() {
           <Button onClick={handleCloseConfirmation}>Eba!</Button>
         </DialogActions>
       </Dialog>
-
     </div>
-
   );
 }
 

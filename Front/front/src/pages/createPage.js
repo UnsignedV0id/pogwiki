@@ -38,8 +38,8 @@ function CreatePage() {
       marginBottom: "20px",
     },
     input: {
-      color: "#fff", // Text color
-      "&::placeholder": { color: "#fff" }, // Placeholder color
+      color: "#fff", 
+      "&::placeholder": { color: "#fff" }, 
     },
     label: {
       color: "#fff",
@@ -108,7 +108,7 @@ function CreatePage() {
         selectedTab="write"
         onTabChange={() => {}}
         generateMarkdownPreview={(markdown) =>
-          Promise.resolve(converter.makeHtml(markdown))
+          Promise.resolve(converter.makeHtml(markdown)) //faz conversao do conteudo markdown.incompativel com underscore e strikethrough
         }
       />
 

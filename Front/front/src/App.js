@@ -1,13 +1,9 @@
 import React from "react";
 import './App.css';
 import Header from "./components/header";
-import Footer from "./components/footer";
 
 import { Routes, Route } from 'react-router-dom';
-import About from "./pages/about"
-import ContactPages from "./pages/contactPage"
 import Home from "./pages/home";
-import Service from "./pages/services"
 import CreateAccount from "./pages/createAccount"
 import RecoverAccount from "./pages/recoverAccount"
 import CreatePage from "./pages/createPage"
@@ -17,6 +13,7 @@ import MyPages from "./pages/myPages";
 import Pages from './pages/pages';  
 
 
+//todas rotas, verificar se possivel envio de rotas baseado em usuario logado
 function App() {
   return (
     <div>
@@ -26,9 +23,6 @@ function App() {
           <article>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/sobre" element={<About />} />
-            <Route path="/servicos" element={<Service />} />
-            <Route path="/contato" element={<ContactPages />} />
             <Route path="/createAccount" element={<CreateAccount />} />
             <Route path="/recoverAccount" element={<RecoverAccount />} />
             <Route path="/createPage" element={<CreatePage />} />

@@ -31,7 +31,7 @@ function Pages() {
       <div style={{ backgroundColor: "#333", padding: "10px", borderRadius: "5px" }}>
         <ReactMarkdown
           children={pageContent}
-          components={{
+          components={{ //customizacao do padrao de cores utilizado no leitor de texto markdown
             p: ({ node, ...props }) => <p style={{ color: 'white' }} {...props} />,
             h1: ({ node, ...props }) => <h1 style={{ color: 'white' }} {...props} />,
             h2: ({ node, ...props }) => <h2 style={{ color: 'white' }} {...props} />,

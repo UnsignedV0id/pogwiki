@@ -15,9 +15,7 @@ function RecoverAccount() {
       setRecoveryMessage("");
     } else {
       setEmailError(false);
-      // Add logic to send recovery email
-      setRecoveryMessage(`Instruções para recuperação da senha enviadas para:  ${email}`);
-      // Simulating the email sending process
+      setRecoveryMessage(`Instruções para recuperação da senha enviadas para:  ${email}`); // teste set message
       setTimeout(() => {
         setRecoveryMessage("");
         setEmail("");
@@ -26,7 +24,7 @@ function RecoverAccount() {
   };
 
   const validateEmail = (email) => {
-    // Expressão regular para validar o formato do e-mail
+    // regex formato simples email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };

@@ -8,7 +8,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
-import axios from "axios"; // Import axios
+import axios from "axios"; 
 
 function CreateAccount() {
   const [user, setUser] = useState("");
@@ -21,12 +21,12 @@ function CreateAccount() {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(true);
 
-  // Function to handle form submission
+  //submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     const fieldsToHighlight = [];
 
-    if (password !== confirmPassword) {
+    if (password !== confirmPassword) {//check confirmacao password
       setPasswordMatch(false);
       fieldsToHighlight.push("confirmPassword");
       return;
@@ -39,10 +39,10 @@ function CreateAccount() {
     if (!email) fieldsToHighlight.push("email");
     if (!agreedTerms) fieldsToHighlight.push("agreedTerms");
 
-    setHighlightFields(fieldsToHighlight);
+    setHighlightFields(fieldsToHighlight);//exibe campos incoretos
 
     if (user && password && confirmPassword && email && agreedTerms && passwordMatch) {
-      try {
+      try {//caso match -> chamada api
         const data = {
           nome: user,
           email: email,
@@ -52,14 +52,6 @@ function CreateAccount() {
         const response = await axios.post("http://localhost:3001/user",data);
 
         if (response.status === 201 ) {
-          console.log(response)
-          // setUser("");
-          // setPassword("");
-          // setConfirmPassword("");
-          // setEmail("");
-          // setAgreedTerms(false);
-          // setHighlightFields([]);
-          // setOpenTermsDialog(false); // Close terms dialog if open
           setShowConfirmation(true);
         } else {
           console.error("Failed to create account");
@@ -104,8 +96,8 @@ function CreateAccount() {
       color: "#fff",
     },
     input: {
-      color: "#fff", // Text color
-      "&::placeholder": { color: "#fff" }, // Placeholder color
+      color: "#fff", 
+      "&::placeholder": { color: "#fff" }, 
     },
     label: {
       color: "#fff",
@@ -215,7 +207,7 @@ function CreateAccount() {
           type="submit"
           variant="outlined"
           style={styles.button}
-          disabled={!agreedTerms} // Disable button if terms are not agreed or passwords don't match
+          disabled={!agreedTerms} //verifica agreed para desabilitar botao
         >
           Criar Conta
         </Button>
@@ -227,9 +219,8 @@ function CreateAccount() {
         PaperProps={{ style: styles.dialog }}
       >
         <DialogTitle>Termos</DialogTitle>
-        <DialogContent>
-          {/* Add your terms and conditions text here */}
-          <Typography variant="body1">Prometo ser muito legal.</Typography>
+        <DialogContent> 
+          <Typography variant="body1">Prometo ser muito legal.</Typography> 
         </DialogContent>
         <DialogActions>
           <Button onClick={handleTermsDialogClose}>Close</Button>

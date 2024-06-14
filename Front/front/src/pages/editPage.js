@@ -99,7 +99,7 @@ function EditPage() {
       color: "white",
     },
   };
-
+//segue padrao da create page porem chamando api de patch
   return (
     <Box sx={{ flexGrow: 1, padding: 2 }}>
       <div style={styles.container}>
@@ -127,7 +127,7 @@ function EditPage() {
       </div>
       <Snackbar
         open={openSnackbar}
-        autoHideDuration={3000}
+        autoHideDuration={1500} // tempo redirect
         onClose={handleSnackbarClose}
         message="Página atualizada com sucesso"
       />

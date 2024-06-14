@@ -25,7 +25,7 @@ import logo from "../images/logo.gif";
 
 function Header() {
   const [anchorEl, setAnchorEl] = useState(null);
-  const [showPassword, setShowPassword] = useState(false); // State to track password visibility
+  const [showPassword, setShowPassword] = useState(false); 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [usernameError, setUsernameError] = useState(false);
@@ -89,7 +89,7 @@ function Header() {
 
   useEffect(() => {
 
-    //pegar array de paginas existentes
+    //pegar array de paginas existentes e aprovadas
     axios.get('http://localhost:3001/pages/approved')
     .then(response => {
     let tempData  = response.data.map(({ id_pages, title }) => ({ value: id_pages, label: title }));;
@@ -100,12 +100,12 @@ function Header() {
     console.error('Error fetching options:', error);
     });
 
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token');//jwt
 
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
-        
+        //mantem usuario logado no f5
         setLoggedInUser(decodedToken.username); 
         setIsAdmin(decodedToken.type == 1 ); 
         setIsLoggedIn(true);
@@ -117,11 +117,10 @@ function Header() {
   }, []);
 
   const handleLoginClick = async () => {
-    // Reset error states
+    //checks de erros no login userSide
     setUsernameError(false);
     setPasswordError(false);
 
-    // Check for empty fields
     if (username === '') {
       setUsernameError(true);
     }
@@ -129,16 +128,16 @@ function Header() {
       setPasswordError(true);
     }
 
-    // If both fields are filled, make the API call
+    // caso correto chamar api de auth p/ cachear token
     if (username !== '' && password !== '') {
       try {
         const response = await axios.post("http://localhost:3001/auth/login", {
-          nome: username,  // Passa o estado do nome
-          senha: password,  // Passa o estado da senha
+          nome: username,  
+          senha: password, 
         });
 
         if (response.status === 201) {
-          // Handle successful login
+          
           console.log('Login successful', response.data);
           const token = response.data?.access_token;
           if (token) {
@@ -153,7 +152,7 @@ function Header() {
             throw new Error("Token não encontrado na resposta");
           }
         } else {
-          // Handle login error
+          
           console.error('Login failed', response.data);
         }
       } catch (error) {
@@ -169,6 +168,8 @@ function Header() {
     setIsLoggedIn(false);
     setIsAdmin(false);
     setLoggedInUser('');
+    //redireciona para a home.
+    routeChange("/");
   };
 
   return (
@@ -215,9 +216,6 @@ function Header() {
                 </NestedMenuItem> */}
               </NestedMenuItem>
             )}
-            <MenuItem onClick={() => routeChange("/contato")}>
-              Contato
-            </MenuItem>
             </Menu>
           </div>
           <div id="#searchBar" style={{ marginLeft: "110px" }}>
@@ -338,7 +336,7 @@ function Header() {
                   <TextField
                     id="Senha"
                     label="Senha"
-                    type={showPassword ? "text" : "password"} // Toggle between 'text' and 'password'
+                    type={showPassword ? "text" : "password"} // mudar visibildiade
                     variant="standard"
                     fullWidth
                     value={password}
@@ -364,11 +362,11 @@ function Header() {
                       },
                     }}
                     InputProps={{
-                      // Add InputProps for visibility toggle
+                      //botao visibilidade
                       endAdornment: (
                         <InputAdornment position="end">
                           <IconButton
-                            onClick={() => setShowPassword(!showPassword)} // Toggle password visibility
+                            onClick={() => setShowPassword(!showPassword)} 
                             edge="end"
                             sx={{ color: "white" }}
                           >
@@ -392,7 +390,7 @@ function Header() {
                 </div>
                 <Button
                   variant="text"
-                  style={{ color: "white" }} // Add custom style for white color
+                  style={{ color: "white" }} 
                   startIcon={<LoginIcon />}
                   onClick={handleLoginClick}
                 >

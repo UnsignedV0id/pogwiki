@@ -76,7 +76,7 @@ function ModeratePages() {
       const response = await axios.put(`http://localhost:3001/pages/${pageId}`, updateData, config);
 
       if (response.status === 200 ) {
-        fetchPages(); // Chama a função para buscar as páginas novamente
+        fetchPages(); // Chama a função para buscar as páginas novamente p/ toda mudança ser dinamica
       }
 
     } catch (err) {
@@ -102,7 +102,7 @@ function ModeratePages() {
       const response = await axios.put(`http://localhost:3001/pages/${pageId}`, updateData, config);
 
       if (response.status === 200 ) {
-        fetchPages(); // Chama a função para buscar as páginas novamente
+        fetchPages(); // Chama a função para buscar as páginas novamente, dinamicidade
       }
 
     } catch (err) {
@@ -138,12 +138,11 @@ function ModeratePages() {
   const isSelected = (pageId) => selectedPages.indexOf(pageId) !== -1;
 
   const determineContrastColor = (backgroundColor) => {
-    // Converte a cor hexadecimal para RGB
+    
     const rgb = parseInt(backgroundColor.substring(1), 16);
     const r = (rgb >> 16) & 0xff;
     const g = (rgb >> 8) & 0xff;
     const b = (rgb >> 0) & 0xff;
-    // Calcula o coeficiente de luminância para determinar se o texto deve ser claro ou escuro
     const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b;
     return luma < 128 ? "#ffffff" : "#000000"; // Retorna branco se o fundo for escuro, caso contrário, preto
   };
@@ -188,7 +187,7 @@ function ModeratePages() {
             </TableHead>
             <TableBody>
               {pages
-                .filter((page) => (!showState && page.state !== 2) || (showState && page.state === 2)) // Ajuste na lógica de filtragem
+                .filter((page) => (!showState && page.state !== 2) || (showState && page.state === 2)) // paginas a serem filtrada at toggle
                 .map((page) => {
                   const isItemSelected = isSelected(page.id);
                   const labelId = `enhanced-table-checkbox-${page.id}`;

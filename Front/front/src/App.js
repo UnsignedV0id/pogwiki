@@ -10,7 +10,7 @@ import CreatePage from "./pages/createPage"
 import EditPage from "./pages/editPage"
 import ModeratePages from "./pages/moderatePages"
 import MyPages from "./pages/myPages";
-import Pages from './pages/pages';  
+import Pages from './pages/pages';
 
 
 //todas rotas, verificar se possivel envio de rotas baseado em usuario logado
